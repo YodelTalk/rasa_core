@@ -87,7 +87,10 @@ class FallbackPolicy(Policy):
         # if NLU interpreter does not provide confidence score,
         # it is set to 1.0 here in order
         # to not override standard behaviour
-        nlu_confidence = nlu_data["intent"].get("confidence", 1.0)
+        if nlu_data["intent"] is None:
+            nlu_confidence = 1.0
+        else:
+            nlu_confidence = nlu_data["intent"].get("confidence", 1.0)
 
         if self.should_fallback(nlu_confidence, tracker.latest_action_name):
             logger.debug("NLU confidence {} is lower "
